@@ -1,20 +1,20 @@
 <template>
-  <div class="full-height logincontainer">
-    <el-form
-        class="loginForm"
-        size="normal"
-        label-width="60px">
-
-
-    <el-form-item>
-      <span class="loginTitle">xchub图书馆</span>
-    </el-form-item>
-    <el-form-item>
-      <router-link :to="{path: '/login'}">
-        <el-button type="primary" class="mybtn" round>登录</el-button>
-      </router-link>
-    </el-form-item>
-    </el-form>
+  <div class="login_container">
+    <div class="login_box">
+      <el-form
+          class="login_form"
+          size="normal"
+          label-width="60px">
+        <el-form-item>
+          <span class="loginTitle">xchub图书馆</span>
+        </el-form-item>
+        <el-form-item>
+          <router-link :to="{path: '/login'}">
+            <el-button type="primary" class="mybtn" round>登录</el-button>
+          </router-link>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -23,35 +23,33 @@
 </script>
 
 <style scoped>
-.logincontainer {
-  height: 100%;
-  width: 100%;
-  background: #fff;
+.login_container {
+  height: 100vh;
   background-image: url("../assets/img/login_bg.jpg");
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background-size: 100% 100%;
 }
 
-.loginForm {
+.login_box{
   height: 300px;
   width: 450px;
-  background: #fff;
-  padding: 35px 20px;
+  background-color: #fff;
   border-radius: 10px;
-}
-
-.loginTitle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+}
+.loginTitle {
+  font-size: 32px;
   font-weight: 600;
   color: #409eff;
 }
 
-.logincontainer ::v-deep .el-form-item__content {
+
+.login_container ::v-deep .el-form-item__content {
   margin-left: 0px !important;
 }
 
