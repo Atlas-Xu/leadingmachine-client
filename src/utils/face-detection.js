@@ -53,7 +53,7 @@ class FaceDetection {
     // 初始化人脸识别
     async initDetection() {
         // 加载模型
-        faceapi.loadTinyFaceDetectorModel('./assets/face-api/models');
+        faceapi.loadTinyFaceDetectorModel('../assets/face-api/models');
 
         const mediaOpt = {
             video: true
