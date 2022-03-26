@@ -33,7 +33,7 @@
   height: 600px;
   width: 650px;
   position: fixed;
-  left: 33%;
+  left: 30%;
   top: 20%;
 }
 
