@@ -32,7 +32,7 @@
 .box-card{
   height: 600px;
   width: 650px;
-  position: absolute;
+  position: fixed;
   left: 33%;
   top: 20%;
 }
