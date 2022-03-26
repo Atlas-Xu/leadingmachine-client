@@ -16,11 +16,14 @@
         <div>
           【温馨提示：请保持光线充足，并正对摄像头】
         </div>
+        <video id="videoEl" autoplay muted></video>
       </el-card>
     </el-main>
   </div>
 </template>
+<script>
 
+</script>
 <style scoped>
 .login_container {
   height: 100vh;
