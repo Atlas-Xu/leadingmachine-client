@@ -10,7 +10,7 @@
         </el-form-item>
         <el-form-item>
           <router-link :to="{path: '/login'}">
-            <el-button type="primary" class="mybtn" round>登录</el-button>
+            <el-button type="primary" class="mybtn" plain>登录</el-button>
           </router-link>
         </el-form-item>
       </el-form>
