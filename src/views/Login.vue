@@ -16,13 +16,13 @@
         <div>
           【温馨提示：请保持光线充足，并正对摄像头】
         </div>
-        <video id="videoEl" autoplay muted></video>
+        <video id="" autoplay muted></video>
       </el-card>
     </el-main>
   </div>
 </template>
 <script>
-
+import {FaceDetection} from "/src/utils/face-detection";
 </script>
 <style scoped>
 .login_container {
