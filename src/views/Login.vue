@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import {FaceDetection} from "/src/utils/face-detection";
+
 </script>
 <style scoped>
 .login_container {
