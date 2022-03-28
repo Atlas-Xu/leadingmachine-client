@@ -18,6 +18,11 @@
             <el-button type="primary" class="mybtn" plain>还书</el-button>
           </router-link>
         </el-form-item>
+        <el-form-item>
+          <router-link :to="{path: '/'}">
+            <el-button type="danger" class="mybtn" plain>退出</el-button>
+          </router-link>
+        </el-form-item>
       </el-form>
     </div>
   </div>

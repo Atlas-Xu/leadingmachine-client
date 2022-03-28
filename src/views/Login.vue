@@ -13,7 +13,8 @@
         <hr/>
         <el-form label-width="60px" class="login_box">
           <el-form-item>
-
+<!--           TODO:人脸识别的视频显示位置，识别出人脸后转base64-->
+            <video></video>
           </el-form-item>
         </el-form>
       </el-main>
@@ -35,7 +36,73 @@
   </div>
 </template>
 <script>
+import {loadTinyFaceDetectorModel} from "face-api.js";
+export default {
+  data() {
+    const errorMap = new Map([
+      ['NotAllowedError', '摄像头已被禁用，请在当前浏览器设置中开启后重试'],
+      ['AbortError', '硬件问题，导致无法访问摄像头'],
+      ['NotFoundError', '未检测到可用摄像头'],
+      ['NotReadableError', '操作系统上某个硬件、浏览器或者网页层面发生错误，导致无法访问摄像头'],
+      ['OverConstrainedError', '未检测到可用摄像头'],
+      ['SecurityError', '摄像头已被禁用，请在系统设置或者浏览器设置中开启后重试'],
+      ['TypeError', '类型错误，未检测到可用摄像头']
+    ])
+    return {}
 
+  },
+  created() {
+    function resize() {
+      const tmp = [this.videoEl, this.canvasImgEl];
+      for (let i = 0; i < tmp.length; i++) {
+        tmp[i].width = this.options.mediaSize.width;
+        tmp[i].height = this.options.mediaSize.height;
+      }
+      const wraperEl = document.querySelector('.wraper');
+      wraperEl.style.width = `${this.options.mediaSize.width}px`;
+      wraperEl.style.height = `${this.options.mediaSize.height}px`;
+    }
+
+    function initVideo(stream) {
+      this.videoEl.onplay = () => {
+        this.onPlay();
+      };
+      this.videoEl.srcObject = this.mediaStreamTrack;
+      setTimeout(() => this.onPlay(), 300);
+    }
+
+    async function initDetection() {
+      loadTinyFaceDetectorModel('../assets/face-api/models');
+      const mediaOpt = {
+        video: true
+      }
+      // 获取 WebRTC 媒体视频流
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // 最新标准API
+        this.mediaStreamTrack = await navigator.mediaDevices.getUserMedia(mediaOpt)
+            .catch(this.mediaErrorCallback);
+      } else if (navigator.webkitGetUserMedia) {
+        // webkit内核浏览器
+        this.mediaStreamTrack = await navigator.webkitGetUserMedia(mediaOpt)
+            .catch(this.mediaErrorCallback);
+      } else if (navigator.mozGetUserMedia) {
+        // Firefox浏览器
+        this.mediaStreamTrack = await navigator.mozGetUserMedia(mediaOpt)
+            .catch(this.mediaErrorCallback);
+      } else if (navigator.getUserMedia) {
+        // 旧版API
+        this.mediaStreamTrack = await navigator.getUserMedia(mediaOpt)
+            .catch(this.mediaErrorCallback);
+      }
+      this.initVideo();
+    }
+
+
+  },
+  mounted() {
+  },
+  methods: {}
+}
 </script>
 <style scoped>
 .login_container {
@@ -48,7 +115,7 @@
 
 .box-card {
   height: 600px;
-  width: 650px;
+  width: 750px;
   position: fixed;
   left: 30%;
   top: 20%;
@@ -65,6 +132,7 @@
 .mybtn {
   width: 70%;
 }
+
 .login_box {
   height: 400px;
   width: 550px;
