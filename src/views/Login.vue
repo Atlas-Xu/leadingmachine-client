@@ -13,18 +13,20 @@
         <hr/>
         <el-form label-width="60px" class="login_box">
           <el-form-item>
-<!--           TODO:人脸识别的视频显示位置，识别出人脸后转base64-->
-            <video></video>
+            <!--           TODO:人脸识别的视频显示位置，识别出人脸后转base64-->
+            <video id="videoEl" autoplay muted></video>
+            <canvas id="trackBox"></canvas>
+            <canvas id="canvasImg"></canvas>
           </el-form-item>
         </el-form>
       </el-main>
       <el-footer>
         <el-row type="flex" justify="center">
           <el-col :span="8">
-            <el-button type="primary" class="mybtn" plain>重新选择</el-button>
+            <el-button type="primary" class="mybtn" @click="reselectButton" plain>重新选择</el-button>
           </el-col>
           <el-col :span="8">
-            <el-button type="success" class="mybtn" @click="login" plain>确认登录</el-button>
+            <el-button type="success" class="mybtn" @click="loginButton" plain>确认登录</el-button>
           </el-col>
         </el-row>
         <hr/>
@@ -36,8 +38,9 @@
   </div>
 </template>
 <script>
-import {loadTinyFaceDetectorModel} from "face-api.js";
+import * as faceapi from "@/assets/face-api/face-api";
 import {faceLoginApi} from "@/api/login";
+
 export default {
   data() {
     const errorMap = new Map([
@@ -50,12 +53,32 @@ export default {
       ['TypeError', '类型错误，未检测到可用摄像头']
     ])
     return {
+      videoEl: document.querySelector('#videoEl'),// 视频区域
+      trackBoxEl: document.querySelector('#trackBox'),// 人脸框绘制区域
+      canvasImgEl: document.querySelector('#canvasImg'),// 图片绘制区域
+      construct(options) {
+        this.options = Object.assign({
+          matchedScore: 0.9,
+          mediaSize: {
+            width: 540,
+            height: 325
+          }
+        }, options)
+      }
 
     }
 
   },
-  created() {
-    function resize() {
+  mounted() {
+  },
+  methods: {
+    loginButton() {
+
+    },
+    reselectButton() {
+
+    },
+    resize() {
       const tmp = [this.videoEl, this.canvasImgEl];
       for (let i = 0; i < tmp.length; i++) {
         tmp[i].width = this.options.mediaSize.width;
@@ -64,18 +87,20 @@ export default {
       const wraperEl = document.querySelector('.wraper');
       wraperEl.style.width = `${this.options.mediaSize.width}px`;
       wraperEl.style.height = `${this.options.mediaSize.height}px`;
-    }
+    },
 
-    function initVideo(stream) {
+    // 初始化视频流
+    initVideo(stream) {
       this.videoEl.onplay = () => {
         this.onPlay();
       };
       this.videoEl.srcObject = this.mediaStreamTrack;
       setTimeout(() => this.onPlay(), 300);
-    }
+    },
 
-    async function initDetection() {
-      loadTinyFaceDetectorModel('../assets/face-api/models');
+    // 初始化人脸识别
+    async initDetection() {
+      faceapi.loadTinyFaceDetectorModel('../assets/face-api/models');
       const mediaOpt = {
         video: true
       }
@@ -98,15 +123,40 @@ export default {
             .catch(this.mediaErrorCallback);
       }
       this.initVideo();
-    }
+    },
+    // 人脸框绘制
+    drawFaceBox(dimensions, trackBox, detections, score) {
+      this.showEl(trackBox);
 
+      // 修改画布大小
+      trackBox.width = this.options.mediaSize.width;
+      trackBox.height = this.options.mediaSize.height;
 
-  },
-  mounted() {
-  },
-  methods: {
-    login(){
+      const resizedDetections = detections.map(res => res.forSize(trackBox.width, trackBox.height));
 
+      // 人脸框绘制参数： 人脸评分 > matchedScore，绘制绿色线框，否则，绘制红色线框。
+      const faceBoxOpts = score > this.options.matchedScore ? {
+        lineWidth: 2,
+        textColor: 'green',
+        boxColor: 'green',
+        withScore: true
+      } : {
+        lineWidth: 2,
+        textColor: 'red',
+        boxColor: 'red',
+        withScore: true
+      };
+
+      // 侦测到人脸后，绘制人脸线框
+      faceapi.drawDetection(trackBox, resizedDetections, faceBoxOpts);
+    },
+    showEl(el) {
+      el.style.visibility = 'visible';
+      return this;
+    },
+    hideEl(el) {
+      el.style.visibility = 'hidden';
+      return this;
     }
   }
 }
