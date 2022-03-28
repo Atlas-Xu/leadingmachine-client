@@ -6,6 +6,6 @@ export const borrowFromMachineApi = async (param) =>{
 }
 
 // 借阅机还书接口
-export const borrowFromMachineApi = async (param) =>{
+export const returnFromMachineApi = async (param) =>{
     return await request.post('/api/borrow/returnFromMachine',param)
 }

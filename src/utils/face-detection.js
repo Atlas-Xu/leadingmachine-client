@@ -95,8 +95,9 @@ class FaceDetection {
       this.canvasImgEl.getContext('2d').drawImage(this.videoEl, 0, 0, this.canvasImgEl.width, this.canvasImgEl.height);
       // 将绘制的图像转化成 图片的 base64 编码
       let image = this.canvasImgEl.toDataURL('image/png');
-      // 百度人脸识别API要求图片不需要包括头部信息，仅base64编码即可 
-      image = image.replace('data:image/png;base64,', '');
+      // 百度人脸识别API要求图片不需要包括头部信息，仅base64编码即可
+      // image = image.replace('data:image/png;base64,', '');
+
     };
   }
 
@@ -150,12 +151,12 @@ class FaceDetection {
   drawFaceBox(dimensions, trackBox, detections, score) {
     this.showEl(trackBox);
 
-    // 修改画布大小 
+    // 修改画布大小
     trackBox.width = this.options.mediaSize.width;
     trackBox.height = this.options.mediaSize.height;
 
     const resizedDetections = detections.map(res => res.forSize(trackBox.width, trackBox.height));
-   
+
     // 人脸框绘制参数： 人脸评分 > matchedScore，绘制绿色线框，否则，绘制红色线框。
     const faceBoxOpts = score > this.options.matchedScore ? {
       lineWidth: 2,

@@ -30,8 +30,10 @@
 </template>
 
 <script>
+import {returnFromMachineApi} from "@/api/borrow";
+import {rfidApi} from "@/api/rfid";
 export default {
-  name: "BookBorrow",
+  name: "BookReturn",
   data() {
     return {
       // 表格高度
