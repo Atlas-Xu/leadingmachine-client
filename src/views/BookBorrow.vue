@@ -1,9 +1,12 @@
 <template>
   <div class="login_container">
     <div align="center">
-      <el-header></el-header>
+      <el-header>
+        <h2 class="top_tip">
+          请确认需要借阅的图书
+        </h2>
+      </el-header>
       <el-main class="book_list">
-        <div>请确认需要借阅的书籍</div>
         <el-table :height="tableHeight" :data="tableData" border stripe>
           <el-table-column label="图书名称" prop="bookName"/>
           <el-table-column label="作者" prop="bookAuthor"/>
@@ -11,13 +14,13 @@
         </el-table>
       </el-main>
       <el-footer>
-        <el-row>
-          <el-col :span="8" align="center">
+        <el-row type="flex" justify="center" >
+          <el-col :span="8">
             <router-link :to="{path: '/choose'}">
               <el-button type="primary" class="mybtn" plain>取消</el-button>
             </router-link>
           </el-col>
-          <el-col :span="8" align="center">
+          <el-col :span="8">
             <el-button type="success" class="mybtn" plain>确认</el-button>
           </el-col>
         </el-row>
@@ -61,4 +64,9 @@ export default {
 .book_list {
   width: 80%;
 }
+.top_tip{
+  color: #e3e8f9;
+
+}
+
 </style>
