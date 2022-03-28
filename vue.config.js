@@ -16,6 +16,11 @@ module.exports = {
                 target: "http://localhost:8089/",
                 changeOrigin: true,
                 ws: true,
+            },
+            "/uhfapi/rfid":{
+                target: "http://localhost:8888/",
+                changeOrigin: true,
+                ws: true
             }
         }
     }

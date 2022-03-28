@@ -21,7 +21,7 @@
             </router-link>
           </el-col>
           <el-col :span="8">
-            <el-button type="success" class="mybtn" plain>确认</el-button>
+            <el-button type="success" class="mybtn" @click="borrowButton" plain>确认</el-button>
           </el-col>
         </el-row>
       </el-footer>
@@ -44,6 +44,11 @@ export default {
     this.$nextTick(() => {
       this.tableHeight = window.innerHeight - 320
     })
+  },
+  methods: {
+    async borrowButton(){
+
+    }
   }
 }
 </script>
