@@ -43,15 +43,15 @@ import {faceLoginApi} from "@/api/login";
 
 export default {
   data() {
-    const errorMap = new Map([
-      ['NotAllowedError', '摄像头已被禁用，请在当前浏览器设置中开启后重试'],
-      ['AbortError', '硬件问题，导致无法访问摄像头'],
-      ['NotFoundError', '未检测到可用摄像头'],
-      ['NotReadableError', '操作系统上某个硬件、浏览器或者网页层面发生错误，导致无法访问摄像头'],
-      ['OverConstrainedError', '未检测到可用摄像头'],
-      ['SecurityError', '摄像头已被禁用，请在系统设置或者浏览器设置中开启后重试'],
-      ['TypeError', '类型错误，未检测到可用摄像头']
-    ])
+    const errorMap = {
+      NotAllowedError: '摄像头已被禁用，请在当前浏览器设置中开启后重试',
+      AbortError: '硬件问题，导致无法访问摄像头',
+      NotFoundError: '未检测到可用摄像头',
+      NotReadableError: '操作系统上某个硬件、浏览器或者网页层面发生错误，导致无法访问摄像头',
+      OverConstrainedError: '未检测到可用摄像头',
+      SecurityError: '摄像头已被禁用，请在系统设置或者浏览器设置中开启后重试',
+      TypeError: '类型错误，未检测到可用摄像头'
+    }
     return {
       videoEl: document.querySelector('#videoEl'),// 视频区域
       trackBoxEl: document.querySelector('#trackBox'),// 人脸框绘制区域
@@ -65,19 +65,32 @@ export default {
           }
         }, options)
       }
-
     }
-
   },
   mounted() {
   },
   methods: {
-    loginButton() {
-
+    async loginButton() {
+      this.canvasImgEl.getContext('2d').drawImage(this.videoEl, 0, 0, this.canvasImgEl.width, this.canvasImgEl.height)
+      let image = this.canvasImgEl.toDataURL('image/png')
+      const param = {
+        base64Str: image
+      }
+      const res = await faceLoginApi(param)
+      if (res && res.code == 200) {
+        this.$message.success(res.msg)
+        setTimeout(function () {
+          window.location.reload()
+        }, 3000)
+      }
     },
     reselectButton() {
-
+      if (this.videoEl.paused || this.videoEl.ended) {
+        this.hideEl(this.trackBoxEl)
+        this.videoEl.play()
+      }
     },
+    // 设置相关容器大小
     resize() {
       const tmp = [this.videoEl, this.canvasImgEl];
       for (let i = 0; i < tmp.length; i++) {
@@ -150,6 +163,32 @@ export default {
       // 侦测到人脸后，绘制人脸线框
       faceapi.drawDetection(trackBox, resizedDetections, faceBoxOpts);
     },
+    async onPlay() {
+      // 判断视频对象是否暂停结束
+      if (this.videoEl && (this.videoEl.paused || this.videoEl.ended)) {
+        this.timer = setTimeout(() => this.onPlay());
+        return;
+      }
+      // 设置 TinyFaceDetector 模型参数：inputSize 输入视频流大小  scoreThreshold 人脸评分阈值
+      const faceDetectionTask = await faceapi.detectSingleFace(this.videoEl, new faceapi.TinyFaceDetectorOptions({
+        inputSize: 512,
+        scoreThreshold: 0.6
+      }));
+      // 判断人脸扫描结果
+      if (faceDetectionTask) {
+        // 画布绘制人脸线框
+        this.drawFaceBox(this.videoEl, this.trackBoxEl, [faceDetectionTask], faceDetectionTask.score)
+        if (faceDetectionTask.score > this.options.matchedScore) {
+          console.log(`检测到人脸，匹配度大于 ${this.options.matchedScore}`);
+          this.showEl(this.operationEl);
+          // 人脸符合要求，暂停视频流
+          this.videoEl.pause();
+          // TODO 调用后端接口进行身份验证
+          return;
+        }
+      }
+      this.timer = setTimeout(() => this.onPlay());
+    },
     showEl(el) {
       el.style.visibility = 'visible';
       return this;
@@ -157,6 +196,10 @@ export default {
     hideEl(el) {
       el.style.visibility = 'hidden';
       return this;
+    },
+    // 获取媒体流错误处理
+    mediaErrorCallback(error) {
+
     }
   }
 }

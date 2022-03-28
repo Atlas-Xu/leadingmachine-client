@@ -32,6 +32,7 @@
 <script>
 import {borrowFromMachineApi} from "@/api/borrow";
 import {rfidApi} from "@/api/rfid";
+
 export default {
   name: "BookBorrow",
   data() {
@@ -48,9 +49,7 @@ export default {
     })
   },
   methods: {
-    async borrowButton(){
 
-    }
   }
 }
 </script>

@@ -17,7 +17,7 @@ module.exports = {
                 changeOrigin: true,
                 ws: true,
             },
-            "/uhfapi/rfid":{
+            "/uhfapi/rfid": {
                 target: "http://localhost:8888/",
                 changeOrigin: true,
                 ws: true
