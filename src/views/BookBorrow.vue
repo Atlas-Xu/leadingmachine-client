@@ -1,6 +1,6 @@
 <template>
   <div class="login_container">
-    <div align="center">
+    <div align="center" class="down_container">
       <el-header>
         <h2 class="top_tip">
           请确认需要借阅的图书
@@ -66,7 +66,10 @@ export default {
 }
 .top_tip{
   color: #e3e8f9;
+}
 
+.down_container{
+  transform: translateY(15%);
 }
 
 </style>
