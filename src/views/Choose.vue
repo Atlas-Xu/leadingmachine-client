@@ -24,9 +24,7 @@
 </template>
 
 <script>
-export default {
-
-}
+export default {}
 </script>
 
 <style scoped>
@@ -36,7 +34,7 @@ export default {
   background-size: 100% 100%;
 }
 
-.login_box{
+.login_box {
   height: 300px;
   width: 450px;
   background-color: #fff;
@@ -49,6 +47,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .loginTitle {
   font-size: 32px;
   font-weight: 600;

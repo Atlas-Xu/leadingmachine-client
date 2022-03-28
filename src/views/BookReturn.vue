@@ -14,7 +14,7 @@
         </el-table>
       </el-main>
       <el-footer>
-        <el-row type="flex" justify="center" >
+        <el-row type="flex" justify="center">
           <el-col :span="8">
             <router-link :to="{path: '/choose'}">
               <el-button type="primary" class="mybtn" plain>取消</el-button>
@@ -64,11 +64,12 @@ export default {
 .book_list {
   width: 80%;
 }
-.top_tip{
+
+.top_tip {
   color: #e3e8f9;
 }
 
-.down_container{
+.down_container {
   transform: translateY(15%);
 }
 

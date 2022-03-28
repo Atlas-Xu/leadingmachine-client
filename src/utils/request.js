@@ -46,8 +46,8 @@ service.interceptor.response.use(
 
 // 请求方法
 const request = {
-    post(url, params){
-        return service.post(url,params,{
+    post(url, params) {
+        return service.post(url, params, {
             transformRequest: [(params) => {
                 return JSON.stringify(params)
             }],
@@ -56,8 +56,8 @@ const request = {
             }
         })
     },
-    put(url,params) {
-        return service.put(url,params,{
+    put(url, params) {
+        return service.put(url, params, {
             transformRequest: [(params) => {
                 return JSON.stringify(params)
             }],
@@ -66,7 +66,7 @@ const request = {
             }
         })
     },
-    get(url,params) {
+    get(url, params) {
         return service.get(url, {
             params: params,
             paramsSerializer: (params) => {
