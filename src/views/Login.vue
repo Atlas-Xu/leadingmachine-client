@@ -24,7 +24,7 @@
             <el-button type="primary" class="mybtn" plain>重新选择</el-button>
           </el-col>
           <el-col :span="8">
-            <el-button type="success" class="mybtn" plain>确认登录</el-button>
+            <el-button type="success" class="mybtn" @click="login" plain>确认登录</el-button>
           </el-col>
         </el-row>
         <hr/>
@@ -37,6 +37,7 @@
 </template>
 <script>
 import {loadTinyFaceDetectorModel} from "face-api.js";
+import {faceLoginApi} from "@/api/login";
 export default {
   data() {
     const errorMap = new Map([
@@ -48,7 +49,9 @@ export default {
       ['SecurityError', '摄像头已被禁用，请在系统设置或者浏览器设置中开启后重试'],
       ['TypeError', '类型错误，未检测到可用摄像头']
     ])
-    return {}
+    return {
+
+    }
 
   },
   created() {
@@ -101,7 +104,11 @@ export default {
   },
   mounted() {
   },
-  methods: {}
+  methods: {
+    login(){
+
+    }
+  }
 }
 </script>
 <style scoped>
