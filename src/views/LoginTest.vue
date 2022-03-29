@@ -1,7 +1,9 @@
 <template>
-  <div id="face_login">
+  <div>
     <div class="body-bg" v-if="!isLoading">
       <div class="WgciCg LCN0VA"></div>
+      <h2 class="title">人脸识别验证登录</h2>
+      <h3 class="title">【温馨提示：请保持光线充足，并正对摄像头】</h3>
       <h2 class="scanTip">{{scanTip}}</h2>
       <div class="take-photo" v-show="showContainer">
         <video autoplay height="400" id="video" loop muted preload ref="refVideo" width="500"></video>
@@ -13,8 +15,9 @@
 </template>
 
 <script>
+import tracking from '@/assets/js/tracking-min'
+import '@/assets/js/face-min'
 export default {
-  el: "#face_login",
   data(){
     return {
       showContainer: true,   // 显示
@@ -33,7 +36,7 @@ export default {
     }
   },
   mounted() {
-    this.playVideo()
+
   },
   methods:{
     // 访问用户媒体设备
@@ -47,7 +50,7 @@ export default {
       } else if (navigator.mozGetUserMedia) {
         // Firefox浏览器
         // eslint-disable-next-line no-undef
-        navagator.mozGetUserMedia(constrains).then(success).catch(error);
+        navigator.mozGetUserMedia(constrains).then(success).catch(error);
       } else if (navigator.getUserMedia) {
         // 旧版API
         navigator.getUserMedia(constrains).then(success).catch(error);
@@ -64,8 +67,12 @@ export default {
       } else {
         this.$refs.refVideo.src = this.URL.createObjectURL(stream)
       }
+      //播放视屏方法最好写在onloadmetadata回调函数中，否则可能会报错。
+      //播放视频的时候出于安全性考虑，必须在本地环境中测试，也就是http://localhost/xxxx中测试，或者带有https://xxxxx环境中测试，不然的话或有跨域问题。
       this.$refs.refVideo.onloadedmetadata = e => {
+        // 播放视频
         this.$refs.refVideo.play()
+        this.playVideo()
       }
     },
     error(e) {
@@ -79,7 +86,7 @@ export default {
       }, this.success, this.error)
       this.video = document.getElementById('video')
       this.canvas = document.getElementById('canvas')
-      this.context = this.canvas.getContext('2d')
+      this.context = this.canvas.getContext('2d') // 画布
       // eslint-disable-next-line no-undef
       this.tracker = new tracking.ObjectTracker('face')
       this.tracker.setInitialScale(4)
@@ -89,6 +96,7 @@ export default {
       tracking.track('#video', this.tracker, {camera: true})
       this.tracker.on('track', this.handleTracked)
     },
+    // 追踪事件
     handleTracked(event) {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
       if (event.data.length === 0) {
@@ -104,9 +112,7 @@ export default {
           this.removePhotoID = setTimeout(() => {
                 this.tackPhoto()
                 this.tipFlag = true
-              },
-              2000
-          )
+              },2000)
         }
         event.data.forEach(this.plot)
       }
@@ -120,25 +126,23 @@ export default {
       this.context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22)
     },
     tackPhoto() {
-      this.context.drawImage(this.$refs.refVideo, 0, 0, 500, 400)
+      this.context.drawImage(this.$refs.refVideo, 1, 0, 500, 400)
       // 保存为base64格式
       this.imgUrl = this.saveAsPNG(this.$refs.refCanvas)
-      var formData = new FormData()
-      formData.append('file', this.imgUrl)
-      axios({
-        method: 'post',
-        url: '/login/detectFaces',
-        data: formData,
-      }).then(function (response) {
-
-        if (response.data.data.firstLogin) {
-          window.location.href = "/login/index1"
-        } else {
-          window.location.href = "/login/index2"
-        }
-      }).catch(function (error) {
-        console.log(error);
-      });
+      // axios({
+      //   method: 'post',
+      //   url: '/login/detectFaces',
+      //   data: formData,
+      // }).then(function (response) {
+      //
+      //   if (response.data.data.firstLogin) {
+      //     window.location.href = "/login/index1"
+      //   } else {
+      //     window.location.href = "/login/index2"
+      //   }
+      // }).catch(function (error) {
+      //   console.log(error);
+      // });
       // detectFaces(formData).then(res => {
       //     this.isLoading = true
       //     if (res.code === 200) {
@@ -178,9 +182,45 @@ export default {
 </script>
 
 <style scoped>
+.body-bg {
+  background: url("../assets/img/login_bg.jpg");
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 1000px;
+  z-index: -10;
+  zoom: 1;
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  background-position: center 0;
+}
+.filmvideo {
+  margin: 200px auto;
+  width: 600px;
+  height: 400px;
+  display: block;
+  clear: both;
+}
 .take-photo {
   position: relative;
   z-index: 99999;
+}
+
+.close {
+  width: 0.8rem;
+  height: 0.8rem;
+  text-align: center;
+  margin: -50px auto;
+}
+
+.rect {
+  border: 2px solid #0aeb08;
+  position: fixed;
+  z-index: 3;
 }
 .imgpre {
   width: 500px;
@@ -204,7 +244,7 @@ video, canvas {
   border-radius: 10px;
 }
 .scanTip {
-  padding-top: 100px;
+  padding-top: 80px;
   padding-bottom: 40px;
   position: relative;
   z-index: 99999;
@@ -212,6 +252,13 @@ video, canvas {
   color: white;
   margin: 0px auto;
   font-size: 18px;
+}
+.title{
+  color: white;
+  text-align: center;
+  position: relative;
+  padding-top: 30px;
+  z-index: 99999;
 }
 
 .WgciCg {
@@ -226,20 +273,5 @@ video, canvas {
   right: 0;
   z-index: 1;
 }
-.body-bg {
-  background: url("../assets/img/login_bg.jpg");
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  min-width: 1000px;
-  z-index: -10;
-  zoom: 1;
-  background-repeat: no-repeat;
-  background-size: cover;
-  -webkit-background-size: cover;
-  -o-background-size: cover;
-  background-position: center 0;
-}
+
 </style>
