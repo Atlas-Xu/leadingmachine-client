@@ -13,7 +13,6 @@
         <hr/>
         <el-form label-width="60px" class="login_box">
           <el-form-item>
-            <!--           TODO:人脸识别的视频显示位置，识别出人脸后转base64-->
             <video id="videoEl" autoplay muted></video>
             <canvas id="trackBox"></canvas>
             <canvas id="canvasImg"></canvas>
@@ -183,7 +182,6 @@ export default {
           this.showEl(this.operationEl);
           // 人脸符合要求，暂停视频流
           this.videoEl.pause();
-          // TODO 调用后端接口进行身份验证
           return;
         }
       }

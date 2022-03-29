@@ -36,7 +36,7 @@ export default {
     }
   },
   mounted() {
-
+  // todo playVideo放在此处可以正常播放
   },
   methods:{
     // 访问用户媒体设备
@@ -72,6 +72,7 @@ export default {
       this.$refs.refVideo.onloadedmetadata = e => {
         // 播放视频
         this.$refs.refVideo.play()
+        // todo 感觉这个函数都没加载
         this.playVideo()
       }
     },
