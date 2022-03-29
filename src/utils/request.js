@@ -9,7 +9,7 @@ const service = axios.create({
 })
 
 // 请求拦截器
-service.interceptor.request.use(
+service.interceptors.request.use(
     config => {
         if (store.getters.token) {
             config.headers['token'] = getToken()
@@ -23,7 +23,7 @@ service.interceptor.request.use(
 )
 
 // 响应拦截器
-service.interceptor.response.use(
+service.interceptors.response.use(
     response => {
         const res = response.data
         if (res.code !== 200) {

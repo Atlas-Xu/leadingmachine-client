@@ -32,6 +32,7 @@
 <script>
 import {returnFromMachineApi} from "@/api/borrow";
 import {rfidApi} from "@/api/rfid";
+import {getUserId} from "@/utils/auth";
 
 export default {
   name: "BookReturn",

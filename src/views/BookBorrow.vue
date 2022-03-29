@@ -32,6 +32,7 @@
 <script>
 import {borrowFromMachineApi} from "@/api/borrow";
 import {rfidApi} from "@/api/rfid";
+import {getUserId} from "@/utils/auth";
 
 export default {
   name: "BookBorrow",
@@ -49,7 +50,9 @@ export default {
     })
   },
   methods: {
+    borrowButton(){
 
+    }
   }
 }
 </script>

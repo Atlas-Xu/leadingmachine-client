@@ -1,4 +1,4 @@
-import request from "@/utils/request";
+import request from "../utils/request";
 
 // 借阅机借书
 export const borrowFromMachineApi = async (param) => {
