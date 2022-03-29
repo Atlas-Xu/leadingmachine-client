@@ -31,11 +31,6 @@ const routes = [
         path: '/bookReturn',
         name: 'BookReturn',
         component: () => import('../views/BookReturn')
-    },
-    {
-        path: '/loginTest',
-        name: 'LoginTest',
-        component: () => import('../views/LoginTest')
     }
 ]
 

@@ -7,7 +7,6 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
   }
 }
 
@@ -25,9 +24,6 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
-  },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
   }
 }
 
@@ -58,7 +54,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
-        resetRouter()
         commit('RESET_STATE')
         resolve()
       }).catch(error => {
