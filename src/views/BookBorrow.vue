@@ -41,7 +41,8 @@ export default {
       // 表格高度
       tableHeight: 0,
       // 表格数据
-      tableData: []
+      tableData: [],
+      bookIds:[]
     }
   },
   mounted() {
@@ -51,6 +52,14 @@ export default {
   },
   methods: {
     borrowButton(){
+      this.bookIds = []
+      // 把每本书的id存入数组
+
+      // 提交
+      const param = {
+        readerId: getUserId(),
+        bookIds: this.bookIds
+      }
 
     }
   }
