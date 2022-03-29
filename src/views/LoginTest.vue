@@ -130,6 +130,7 @@ export default {
       this.context.drawImage(this.$refs.refVideo, 1, 0, 500, 400)
       // 保存为base64格式
       this.imgUrl = this.saveAsPNG(this.$refs.refCanvas)
+      // TODO 调用api上传base64字符串
       // axios({
       //   method: 'post',
       //   url: '/login/detectFaces',
