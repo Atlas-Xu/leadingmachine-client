@@ -15,8 +15,11 @@
 </template>
 
 <script>
+import request from "@/utils/request";
+
 require('@/assets/js/tracking-min')
 require('@/assets/js/face-min')
+import {faceLoginApi} from "@/api/login";
 export default {
   data(){
     return {
@@ -67,7 +70,6 @@ export default {
       } else {
         this.$refs.refVideo.src = this.URL.createObjectURL(stream)
       }
-      //播放视屏方法最好写在onloadmetadata回调函数中，否则可能会报错。
       //播放视频的时候出于安全性考虑，必须在本地环境中测试，也就是http://localhost/xxxx中测试，或者带有https://xxxxx环境中测试，不然的话或有跨域问题。
       this.$refs.refVideo.onloadedmetadata = e => {
         // 播放视频
@@ -128,9 +130,8 @@ export default {
       this.context.drawImage(this.$refs.refVideo, 1, 0, 500, 400)
       // 保存为base64格式
       this.imgUrl = this.saveAsPNG(this.$refs.refCanvas)
-      // TODO 调用api上传base64字符串
-
-
+      //调用api上传base64字符串
+      this.faceLogin()
       this.close()
       this.scanTip = '登录中，请稍等~'
       this.isLoading = true
@@ -156,6 +157,29 @@ export default {
         this.streamIns.getVideoTracks()[0].stop()
       }
       this.streamIns = null
+    },
+    async faceLogin(){
+      const param = {
+        base64Str: this.imgUrl
+      }
+      //console.log(param.base64Str)
+      this.$axios.post('/api/system/faceLogin', param).then
+      (res=>{
+            console.log(res)
+            if (res.data && res.data.code == 200) {
+              console.log(res.data.msg)
+              this.$message.success(res.data.msg)
+              this.$userdata.userId=res.data.data.userId
+              this.$userdata.token=res.data.data.token
+              this.$router.push({name:"Choose"})
+              // todo 跳转路由
+            }
+            else {
+              this.$message.error("登陆失败");
+              window.reload()
+            }
+      })
+
     }
   }
 }

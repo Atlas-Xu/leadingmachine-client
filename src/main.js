@@ -8,8 +8,14 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/global.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import  axios from 'axios'
+import userdata from "@/store/modules/Userdata";
 
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
+Vue.prototype.$axios = axios
+Vue.prototype.$userdata = userdata
+
+axios.defaults.timeout = 5000
 
 Vue.use(ElementUI)
 Vue.use(BootstrapVue)

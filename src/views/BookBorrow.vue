@@ -57,9 +57,11 @@ export default {
 
       // 提交
       const param = {
-        readerId: getUserId(),
+        readerId: this.$userdata.userId,
         bookIds: this.bookIds
       }
+
+      console.log(param)
 
     }
   }

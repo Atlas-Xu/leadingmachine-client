@@ -19,7 +19,13 @@
 </template>
 
 <script>
-
+  export default {
+    name:'HomePage',
+    mounted() {
+      this.$userdata.userId = -1
+      this.$userdata.token = ''
+    }
+  }
 </script>
 
 <style scoped>

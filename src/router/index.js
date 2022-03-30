@@ -44,13 +44,13 @@ const router = new VueRouter({
 //         next()
 //     }else {
 //         const token = getToken()
-//         if (token === null || token === ''){
+//         if (!token){
 //             Message({
 //                 message: '请先登录',
 //                 type: 'error',
 //                 duration: 5 * 1000
 //             })
-//             router.push('/login');
+//             next('/login')
 //         }else {
 //             next()
 //         }
