@@ -30,9 +30,7 @@
 </template>
 
 <script>
-import {borrowFromMachineApi} from "@/api/borrow";
-import {rfidApi} from "@/api/rfid";
-import {getUserId} from "@/utils/auth";
+
 
 export default {
   name: "BookBorrow",
@@ -45,16 +43,34 @@ export default {
       bookIds:[]
     }
   },
+  created() {
+    this.getList()
+  },
   mounted() {
     this.$nextTick(() => {
       this.tableHeight = window.innerHeight - 320
     })
   },
   methods: {
-    borrowButton(){
+    // 读取RFID书本数据
+    getList(){
+      this.$axios.get('/uhfapi/rfid').then(res => {
+        this.tableData = res.data.data
+        console.log(this.tableData)
+      })
+    },
+    // 提取bookId存入
+    transferToBookIds(){
       this.bookIds = []
-      // 把每本书的id存入数组
+      this.tableData.forEach(item => {
+        this.bookIds.push(item.bookId)
+      })
+    },
 
+    // 确认借阅
+    borrowButton(){
+      this.transferToBookIds()
+      console.log(this.bookIds)
       // 提交
       const param = {
         readerId: this.$userdata.userId,
@@ -62,6 +78,21 @@ export default {
       }
 
       console.log(param)
+      this.$axios.post('/api/borrow/borrowFromMachine', param).then(res => {
+        console.log(res)
+        if(res.data.status === 200){
+          this.$message({
+            type: 'success',
+            message: '借阅成功'
+          })
+          this.$router.push('/')
+        }else{
+          this.$message({
+            type: 'error',
+            message: res.data.msg
+          })
+        }
+      })
 
     }
   }

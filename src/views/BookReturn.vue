@@ -21,7 +21,7 @@
             </router-link>
           </el-col>
           <el-col :span="8">
-            <el-button type="success" class="mybtn" plain>确认</el-button>
+            <el-button type="success" class="mybtn" @click="returnButton" plain>确认</el-button>
           </el-col>
         </el-row>
       </el-footer>
@@ -30,9 +30,7 @@
 </template>
 
 <script>
-import {returnFromMachineApi} from "@/api/borrow";
-import {rfidApi} from "@/api/rfid";
-import {getUserId} from "@/utils/auth";
+
 
 export default {
   name: "BookReturn",
@@ -41,13 +39,56 @@ export default {
       // 表格高度
       tableHeight: 0,
       // 表格数据
-      tableData: []
+      tableData: [],
+      bookIds: []
     }
+  },
+  created() {
+    this.getList()
   },
   mounted() {
     this.$nextTick(() => {
       this.tableHeight = window.innerHeight - 320
     })
+  },
+  methods:{
+    // 读取RFID书本数据
+    getList(){
+      this.$axios.get('/uhfapi/rfid').then(res => {
+        this.tableData = res.data.data
+      })
+    },
+    // 提取bookId存入
+    transferToBookIds(){
+      this.bookIds = []
+      this.tableData.forEach(item => {
+        this.bookIds.push(item.bookId)
+      })
+      console.log(this.bookIds)
+    },
+    // 确认归还
+    returnButton(){
+      this.transferToBookIds()
+      const param = {
+        readerId: this.$userdata.userId,
+        bookIds: this.bookIds
+      }
+      console.log(param)
+      this.$axios.post('/api/borrow/returnFromMachine', param).then(res => {
+        if(res.data.code === 200){
+          this.$message({
+            type: 'success',
+            message: '归还成功'
+          })
+          this.$router.push('/')
+        }else{
+          this.$message({
+            type: 'error',
+            message: '归还失败'
+          })
+        }
+      })
+    }
   }
 }
 </script>
